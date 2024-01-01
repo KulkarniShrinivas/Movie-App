@@ -1,13 +1,29 @@
 import React from 'react'
 import "./style.scss";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {useNavigate} from "react-router-dom";
+import { useSelector } from "react-redux";
 import useFetch from '../../../hooks/useFetch';
 
 const HeroBanner = () => {
   const [background, setBackground] = useState("");
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+
+  //it will give correct urls in components
+  const { url } = useSelector((state) => state.home);
+
+  //changing ths upcoming movies background images by calling api from useFetch
+  const { data, loading } = useFetch("/movie/upcoming");
+
+  //whenever data changes 
+
+  useEffect(() => {
+    const bg =
+        url.backdrop +
+        data?.results?.[Math.floor(Math.random() * 20)]?.backdrop_path;
+    setBackground(bg);
+}, [data]);
 
   //write method for search input
   const searchQueryHandler = (event) => {
@@ -21,6 +37,11 @@ const HeroBanner = () => {
 
   return (
     <div className="heroBanner">
+
+      <div className="backdrop-img">
+        
+      </div>
+
       <div className="wrapper">
         <div className="heroBannerContent">
           <span className="title">Welcome</span>
