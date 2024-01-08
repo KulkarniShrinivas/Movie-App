@@ -1,76 +1,62 @@
-import React from 'react'
-import "./style.scss";
-import { useState, useEffect } from 'react';
-import {useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import useFetch from '../../../hooks/useFetch';
+import "./style.scss";
 
-import Img from '../../../components/lazyLoadImage/Img';
-import ContentWrapper from '../../../components/contentWrapper/ContentWrapper';
+import useFetch from "../../../hooks/useFetch";
 
+import Img from "../../../components/lazyLoadImage/Img";
+import ContentWrapper from "../../../components/contentWrapper/ContentWrapper";
 
 const HeroBanner = () => {
-  const [background, setBackground] = useState("");
-  const [query, setQuery] = useState("");
-  const navigate = useNavigate();
+    const [background, setBackground] = useState("");
+    const [query, setQuery] = useState("");
+    const navigate = useNavigate();
+    const { url } = useSelector((state) => state.home);
+    const { data, loading } = useFetch("/movie/upcoming");
 
-  //it will give correct urls in components
-  const { url } = useSelector((state) => state.home);
+    useEffect(() => {
+        const bg =
+            url.backdrop +
+            data?.results?.[Math.floor(Math.random() * 20)]?.backdrop_path;
+        setBackground(bg);
+    }, [data]);
 
-  //changing ths upcoming movies background images by calling api from useFetch
-  const { data, loading } = useFetch("/movie/upcoming");
+    const searchQueryHandler = (event) => {
+        if (event.key === "Enter" && query.length > 0) {
+            navigate(`/search/${query}`);
+        }
+    };
 
-  //whenever data changes 
+    return (
+        <div className="heroBanner">
+            {!loading && (
+                <div className="backdrop-img">
+                    <Img src={background} />
+                </div>
+            )}
 
-  useEffect(() => {
-    const bg =
-        url.backdrop +
-        data?.results?.[Math.floor(Math.random() * 20)]?.backdrop_path;
-    setBackground(bg);
-}, [data]);
-
-  //write method for search input
-  const searchQueryHandler = (event) => {
-    if(event.key === "Enter" && query.length > 0) {
-      navigate(`/search/${query}`)
-
-
-    }
-
-  }
-
-  return (
-    <div className="heroBanner">
-
-      {/** if loading state is false then it should render at the place   */}
-
-      { !loading && <div className="backdrop-img">
-        <Img  src={background} />
-      </div> }
-
-
-      <div className="opacity-layer"></div>
-
-      <ContentWrapper>
-        <div className="heroBannerContent">
-          <span className="title">Welcome</span>
-          <span className="subtitle">Millions of movies, TV shows and people to discover, Explore now.</span>
-          <div className="searchInput">
-            <input 
-              type="text" 
-              placeholder="Search for a movie or tv show..." 
-              onChange={(e)=> setQuery(e.target.value)}
-              onKeyUp={searchQueryHandler}
-            />
-          </div>
-          <button>Search</button>
+            <div className="opacity-layer"></div>
+            <ContentWrapper>
+                <div className="heroBannerContent">
+                    <span className="title">Welcome.</span>
+                    <span className="subTitle">
+                        Millions of movies, TV shows and people to discover.
+                        Explore now.
+                    </span>
+                    <div className="searchInput">
+                        <input
+                            type="text"
+                            placeholder="Search for a movie or tv show...."
+                            onChange={(e) => setQuery(e.target.value)}
+                            onKeyUp={searchQueryHandler}
+                        />
+                        <button>Search</button>
+                    </div>
+                </div>
+            </ContentWrapper>
         </div>
-      
-      </ContentWrapper>
+    );
+};
 
-      
-    </div>
-  )
-}
-
-export default HeroBanner
+export default HeroBanner;
