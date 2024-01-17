@@ -48,6 +48,20 @@ const Header = () => {
 
     }
 
+    //Including Navigation maethod so will create method
+
+    const navigationHandler = (type) => {
+      if(type === "movie") {
+          navigate("/explore/movie");
+      } else{
+        navigate("/explore/tv");
+
+      }
+      //so after opening this we need to close the menu  so make setmobilemenu as false 
+      setMobileMenu(false);
+    };
+
+
     return (
       <header className={`header ${mobileMenu ? "mobileView" : ""} ${show}`}>
           <ContentWrapper>
@@ -56,10 +70,10 @@ const Header = () => {
             </div>
             
             <ul className="menuItems">
-              <li className="menuItem">Movies</li>
-              <li className="menuItem">TV Shows</li>
+              <li className="menuItem" onClick={() => navigationHandler("movie")}>Movies</li>
+              <li className="menuItem" onClick={() => navigationHandler("tv")}>TV Shows</li>
               <li className="menuItem">
-                <HiOutlineSearch />
+              <HiOutlineSearch  onClick={openSearch}/>
               </li>
             </ul>
 
