@@ -22,6 +22,15 @@ const Header = () => {
     const location = useLocation();
 
 
+    const searchQueryHandler = (event) => {
+      if (event.key === "Enter" && query.length > 0) {
+          navigate(`/search/${query}`);
+      }
+      setTimeout(() => {
+        setShowSearch(false);
+      }, 1000);
+  };
+
     //to handle mobile menu we need to create two method
 
     const openSearch = () => {
@@ -55,7 +64,7 @@ const Header = () => {
             </ul>
 
             <div className="mobileMenuItems">
-              <HiOutlineSearch />
+              <HiOutlineSearch  onClick={openSearch}/>
               {mobileMenu ? (
                 //if its true we need to show close button
                   <VscChromeClose onClick={() => setMobileMenu(false)} />
@@ -67,6 +76,30 @@ const Header = () => {
               
             </div>
           </ContentWrapper>
+
+         { /*searchBar*/}
+
+         
+              {showSearch && (
+                <div className="searchBar">
+                <ContentWrapper>
+                  <div className="searchInput">
+             
+                  <input
+                      type="text"
+                      placeholder="Search for a movie or tv show...."
+                      onChange={(e) => setQuery(e.target.value)}
+                      onKeyUp={searchQueryHandler}
+                  />
+                  <VscChromeClose onClick={() => setShowSearch(false)} />
+              </div>
+           </ContentWrapper>
+         </div>
+       )}
+              
+
+
+
         </header>
     );
 };
