@@ -10,7 +10,8 @@ import "./style.scss";
 
 import ContentWrapper from "../contentWrapper/ContentWrapper";
 import logo from "../../assets/movix-logo.svg";
-import pi from "../../assets/pi.png"
+import pi from "../../assets/pi.png";
+
 
 const Header = () => {
     const [show, setShow] = useState("top");
@@ -20,6 +21,29 @@ const Header = () => {
     const [showSearch, setShowSearch] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
+
+    const controlNavbar = () => {
+      console.log(window.scrollY);
+      if(window.scrollY > 200){
+        if(window.scrollY >lastScrollY && !mobileMenu){
+          setShow("hide");
+        } else{
+          setShow("show");
+        }
+        
+      } else{
+        setShow("top");
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    useEffect(() => {
+      window.addEventListener("scroll", controlNavbar);
+      return () => {
+        window.removeEventListener("scroll",controlNavbar);
+      }
+      //scrolly will display in console how many times you have scrolled 
+    }, [lastScrollY])
 
 
     const searchQueryHandler = (event) => {
